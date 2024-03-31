@@ -1,0 +1,13 @@
+﻿@using ME.Popup.Extensions
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h1>Hoş Geldiniz</h1>
+<p>
+    Bu panel <b>ME Popup</b> için hazırlanmış test panelidir.
+</p>
+
+<button id="btnPopup">Popup Aç</button>
+
+@(Popup.CreatePopup().Form<TestModel>(2).Render("#btnPopup"))

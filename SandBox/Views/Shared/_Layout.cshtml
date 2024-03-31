@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - SandBox</title>
+	<link href="~/css/site.css" rel="stylesheet" />
+	<link href="~/css/me.popup.css" rel="stylesheet" />
+	<script src="~/lib/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+	<header>
+		<a href="/"><img src="~/images/logo.png" title="BugraME" height="40" /></a>
+	</header>
+	<aside>
+		<nav>
+			<ul>
+				<li><a href="/about">About</a></li>
+				<li><a href="/contact">Contact</a></li>
+			</ul>
+		</nav>
+	</aside>
+	<main>
+		@RenderBody()
+	</main>
+	<script src="~/js/me.popup.js"></script>
+</body>
+</html>
