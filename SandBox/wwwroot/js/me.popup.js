@@ -7,6 +7,5 @@ $(function () {
 		const file = this.files[0];
 		if (file) element.attr("src", URL.createObjectURL(file));
 		else element.removeAttr("src");
-
 	});
 })
