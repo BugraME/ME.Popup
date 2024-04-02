@@ -1,13 +1,20 @@
-﻿@using ME.Popup.Extensions
+﻿@using ME.Popup.Enums
+@using ME.Popup.Extensions
 @{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
 }
 
 <h1>Hoş Geldiniz</h1>
 <p>
-    Bu panel <b>ME Popup</b> için hazırlanmış test panelidir.
+	Bu panel <b>ME Popup</b> için hazırlanmış test panelidir.
 </p>
 
 <button id="btnPopup">Popup Aç</button>
 
-@(Popup.CreatePopup().Form<TestModel>(2).Render("#btnPopup"))
+@(Popup.CreatePopup().Form<TestModel>(new() {
+	HtmlId = "formTest",
+	Action = "/Test",
+	Enctype = FormEnctype.FormUrlEncoded,
+	Method = FormHttpMethod.Post,
+	ColumnCount = 2,
+}).Render("#btnPopup"))

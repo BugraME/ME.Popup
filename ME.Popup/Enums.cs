@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
-namespace ME.Popup;
+namespace ME.Popup.Enums;
 public record struct EnumModel(int Value, string Name, string Description);
-public static class Enums {
+public static class EnumMethods {
 	public static string GetEnumDescription(this Enum value) {
 		FieldInfo fieldInfo = value.GetType().GetField(value.ToString());
 		if (fieldInfo == null) return "Error";
@@ -18,13 +18,55 @@ public static class Enums {
 		return enumValues.Cast<Enum>().GetEnumModel();
 	}
 	private static IEnumerable<EnumModel> GetEnumModel(this IEnumerable<Enum> array) => array.Select(x => new EnumModel {
-		Value = int.TryParse(x.ToString(), out int value) ? value : 0,
+		Value = Convert.ToInt32(x),
 		Name = x.ToString(),
 		Description = GetEnumDescription(x)
 	});
+}
+public enum InputType {
+	[Description("text")] Text = 0,
+	[Description("email")] Email = 1,
+	[Description("password")] Password = 2,
+	[Description("tel")] Tel = 3,
+	[Description("url")] Url = 4,
+	[Description("search")] Search = 5,
+	[Description("textarea")] Textarea = 6,
+	[Description("hidden")] Hidden = 7,
+	[Description("number")] Number = 8,
+	[Description("range")] Range = 9,
+	[Description("date")] Date = 10,
+	[Description("time")] Time = 11,
+	[Description("datetime-local")] DateTimeLocal = 12,
+	[Description("month")] Month = 13,
+	[Description("week")] Week = 14,
+	[Description("datetime")] DateTime = 15,
+	[Description("color")] Color = 16,
+	[Description("file")] File = 17,
+	[Description("checkbox")] Checkbox = 18,
+	[Description("radio")] Radio = 19,
+	[Description("select")] Select = 20,
+	[Description("button")] Button = 21,
+	[Description("submit")] Submit = 22,
+	[Description("reset")] Reset = 23,
+	[Description("image")] Image = 24,
+}
 
-	public enum PopupType {
-		Form = 0,
-		Question = 1,
-	}
+public enum ElementType {
+	[Description("input")] Input = 0,
+	[Description("textarea")] Textarea = 1,
+	[Description("select")] Select = 2,
+}
+
+public enum FormHttpMethod {
+	Get = 1,
+	Post = 2,
+}
+public enum FormEnctype {
+	[Description("text/plain")] TextPlain = 0,
+	[Description("multipart/form-data")] MultipartFormData = 1,
+	[Description("application/x-www-form-urlencoded")] FormUrlEncoded = 2,
+}
+public enum PopupType {
+	Form = 0,
+	Question = 1,
 }
