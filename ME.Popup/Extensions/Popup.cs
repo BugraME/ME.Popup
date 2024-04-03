@@ -123,31 +123,29 @@ public class Popup {
 		TextAreaAttribute textAreaAttribute = propertyInfo.GetCustomAttribute<TextAreaAttribute>();
 		Type propertyType = propertyInfo.PropertyType;
 
-		if (inputTypeAttribute != null) element.Attributes.Add("type", inputTypeAttribute.Value.GetEnumDescription());
+		if (propertyType.IsEnum) {
+			element = CreateElement("select");
+			foreach (EnumModel enumModel in EnumMethods.GetEnumValues(propertyType)) {
+				HtmlNode option = CreateElement("option");
+				option.Attributes.Add("value", enumModel.Value == 0 ? enumModel.Name : enumModel.Value.ToString());
+				option.InnerHtml = !string.IsNullOrWhiteSpace(enumModel.Description) ? enumModel.Description : enumModel.Name;
+				element.AppendChild(option);
+			}
+		}
+		else if (textAreaAttribute != null) {
+			element = CreateElement("textarea");
+			element.Attributes.Add(textAreaAttribute.HtmlAttribute);
+		}
 		else {
-			if (propertyType.IsEnum) {
-				element = CreateElement("select");
-				foreach (EnumModel enumModel in EnumMethods.GetEnumValues(propertyType)) {
-					HtmlNode option = CreateElement("option");
-					option.Attributes.Add("value", enumModel.Value == 0 ? enumModel.Name : enumModel.Value.ToString());
-					option.InnerHtml = !string.IsNullOrWhiteSpace(enumModel.Description) ? enumModel.Description : enumModel.Name;
-					element.AppendChild(option);
-				}
-			}
-			else if (textAreaAttribute != null) {
-				element = CreateElement("textarea");
-				element.Attributes.Add(textAreaAttribute.HtmlAttribute);	
-			}
-			else {
-				InputType inputType = InputType.Text;
-				if (propertyType == typeof(int)) inputType = InputType.Number;
-				else if (propertyType == typeof(DateTime)) inputType = InputType.DateTimeLocal;
-				else if (propertyType == typeof(DateOnly)) inputType = InputType.Date;
-				else if (propertyType == typeof(TimeSpan) || propertyType == typeof(TimeOnly)) inputType = InputType.Time;
-				else if (propertyType == typeof(bool)) inputType = InputType.Checkbox;
-				else if (propertyType == typeof(IFormFile)) inputType = InputType.File;
-				element.Attributes.Add("type", inputType.GetEnumDescription());
-			}
+			InputType inputType = InputType.Text;
+			if (inputTypeAttribute != null) inputType = InputType.Hidden;
+			else if (propertyType == typeof(int)) inputType = InputType.Number;
+			else if (propertyType == typeof(DateTime)) inputType = InputType.DateTimeLocal;
+			else if (propertyType == typeof(DateOnly)) inputType = InputType.Date;
+			else if (propertyType == typeof(TimeSpan) || propertyType == typeof(TimeOnly)) inputType = InputType.Time;
+			else if (propertyType == typeof(bool)) inputType = InputType.Checkbox;
+			else if (propertyType == typeof(IFormFile)) inputType = InputType.File;
+			element.Attributes.Add("type", inputType.GetEnumDescription());
 		}
 
 		foreach (IHtmlAttribute attribute in propertyInfo.GetCustomAttributes().Where(x => x is IHtmlAttribute).Cast<IHtmlAttribute>()) {
@@ -156,7 +154,7 @@ public class Popup {
 		MaxLengthAttribute maxLengthAttribute = propertyInfo.GetCustomAttribute<MaxLengthAttribute>();
 		if (maxLengthAttribute != null) element.Attributes.Add("maxlength", maxLengthAttribute.Length.ToString());
 
-		if (propertyInfo.GetCustomAttribute<RequiredAttribute>() != null) element.Attributes.Add("required");
+		if (propertyInfo.GetCustomAttribute<RequiredAttribute>() != null) element.Attributes.Add("required", "required");
 
 		return element;
 	}

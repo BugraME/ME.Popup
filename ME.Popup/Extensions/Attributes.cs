@@ -30,7 +30,7 @@ public class CustomHtmlAttribute : PropertyAttribute, IHtmlAttribute {
 	private readonly HtmlAttribute _attribute;
 	public CustomHtmlAttribute(string key) {
 		if (string.IsNullOrWhiteSpace(key)) throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
-		_attribute = Document.CreateAttribute(key);
+		_attribute = Document.CreateAttribute(key, key);
 	}
 
 	public CustomHtmlAttribute(string key, string value) {
@@ -41,10 +41,7 @@ public class CustomHtmlAttribute : PropertyAttribute, IHtmlAttribute {
 	public HtmlAttribute HtmlAttribute => _attribute;
 }
 public class NameAttribute(string value) : ValueAttribute<string>(value) { }
-public class InputTypeAttribute(InputType type) : ValueAttribute<InputType>(type), IHtmlAttribute {
-	private readonly InputType _type = type;
-	public HtmlAttribute HtmlAttribute => Document.CreateAttribute("type", _type.GetEnumDescription());
-}
+public class InputTypeAttribute(InputType type) : ValueAttribute<InputType>(type) { }
 public class OrderAttribute(int value) : ValueAttribute<int>(value) { }
 #endregion
 
