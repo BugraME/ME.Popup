@@ -44,9 +44,14 @@ public class Popup {
 			HtmlNode parentDiv = CreateElement("div");
 			parentDiv.AddClass("me-form-group");
 
-			HtmlNode label = CreateElement("label");
-			LabelAttribute labelAttribute = propertyInfo.GetCustomAttribute<LabelAttribute>();
-			label.InnerHtml = (labelAttribute != null ? labelAttribute.Value : propertyInfo.Name) + ":" + (propertyInfo.GetCustomAttribute<RequiredAttribute>() != null ? "*" : string.Empty);
+			HtmlNode label = null;
+
+			HideLabelAttribute hideLabelAttribute = propertyInfo.GetCustomAttribute<HideLabelAttribute>();
+			if (hideLabelAttribute == null || !hideLabelAttribute.Status) {
+				label = CreateElement("label");
+				LabelAttribute labelAttribute = propertyInfo.GetCustomAttribute<LabelAttribute>();
+				label.InnerHtml = (labelAttribute != null ? labelAttribute.Value : propertyInfo.Name) + ":" + (propertyInfo.GetCustomAttribute<RequiredAttribute>() != null ? "*" : string.Empty);
+			}
 
 			HtmlNode element = InitializeElement(propertyInfo);
 			ImageReviewerAttribute imageReviewerAttribute = propertyInfo.GetCustomAttribute<ImageReviewerAttribute>();
@@ -58,7 +63,7 @@ public class Popup {
 			}
 
 			MultipleFilesAttribute multipleFilesAttribute = propertyInfo.GetCustomAttribute<MultipleFilesAttribute>();
-			if (multipleFilesAttribute != null && multipleFilesAttribute.Status) element.Attributes.Add("multiple", "multiple");
+			if (multipleFilesAttribute != null && multipleFilesAttribute.Status) element.Attributes.Add(multipleFilesAttribute.HtmlAttribute);
 
 			formElement.Label = label;
 			formElement.Element = element;
@@ -87,8 +92,8 @@ public class Popup {
 				if (formElement.PrependElements.Count > 0) {
 					foreach (HtmlNode prependElement in formElement.PrependElements) { formGroup.AppendChild(prependElement); }
 				}
-				formGroup.AppendChild(formElement.Label);
-				formGroup.AppendChild(formElement.Element);
+				if (formElement.Label != null) formGroup.AppendChild(formElement.Label);
+				if (formElement.Element != null) formGroup.AppendChild(formElement.Element);
 				if (formElement.AppendElements.Count > 0) {
 					foreach (HtmlNode appendElement in formElement.AppendElements) { formGroup.AppendChild(appendElement); }
 				}
@@ -109,43 +114,43 @@ public class Popup {
 
 	private HtmlNode InitializeElement(PropertyInfo propertyInfo) {
 		HtmlNode element = CreateElement("input");
-		element.Attributes.Add("name", propertyInfo.Name);
+
+		NameAttribute nameAttribute = propertyInfo.GetCustomAttribute<NameAttribute>();
+		if (nameAttribute != null) element.Attributes.Add("name", nameAttribute.Value);
+		else element.Attributes.Add("name", propertyInfo.Name);
 
 		InputTypeAttribute inputTypeAttribute = propertyInfo.GetCustomAttribute<InputTypeAttribute>();
 		TextAreaAttribute textAreaAttribute = propertyInfo.GetCustomAttribute<TextAreaAttribute>();
 		Type propertyType = propertyInfo.PropertyType;
 
-		if (inputTypeAttribute != null) element.Attributes.Add("type", inputTypeAttribute.Value.GetEnumDescription());
+		if (propertyType.IsEnum) {
+			element = CreateElement("select");
+			foreach (EnumModel enumModel in EnumMethods.GetEnumValues(propertyType)) {
+				HtmlNode option = CreateElement("option");
+				option.Attributes.Add("value", enumModel.Value == 0 ? enumModel.Name : enumModel.Value.ToString());
+				option.InnerHtml = !string.IsNullOrWhiteSpace(enumModel.Description) ? enumModel.Description : enumModel.Name;
+				element.AppendChild(option);
+			}
+		}
+		else if (textAreaAttribute != null) {
+			element = CreateElement("textarea");
+			element.Attributes.Add(textAreaAttribute.HtmlAttribute);
+		}
 		else {
-			if (propertyType.IsEnum) {
-				element = CreateElement("select");
-				foreach (EnumModel enumModel in EnumMethods.GetEnumValues(propertyType)) {
-					HtmlNode option = CreateElement("option");
-					option.Attributes.Add("value", enumModel.Value == 0 ? enumModel.Name : enumModel.Value.ToString());
-					option.InnerHtml = !string.IsNullOrWhiteSpace(enumModel.Description) ? enumModel.Description : enumModel.Name;
-					element.AppendChild(option);
-				}
-			}
-			else if (textAreaAttribute != null) {
-				element = CreateElement("textarea");
-				element.Attributes.Add(textAreaAttribute.HtmlAttribute);
-			}
-			else {
-				InputType inputType = InputType.Text;
-				if (propertyType == typeof(int)) inputType = InputType.Number;
-				else if (propertyType == typeof(DateTime)) inputType = InputType.DateTimeLocal;
-				else if (propertyType == typeof(DateOnly)) inputType = InputType.Date;
-				else if (propertyType == typeof(TimeSpan) || propertyType == typeof(TimeOnly)) inputType = InputType.Time;
-				else if (propertyType == typeof(bool)) inputType = InputType.Checkbox;
-				else if (propertyType == typeof(IFormFile)) inputType = InputType.File;
-				element.Attributes.Add("type", inputType.GetEnumDescription());
-			}
+			InputType inputType = InputType.Text;
+			if (inputTypeAttribute != null) inputType = InputType.Hidden;
+			else if (propertyType == typeof(int)) inputType = InputType.Number;
+			else if (propertyType == typeof(DateTime)) inputType = InputType.DateTimeLocal;
+			else if (propertyType == typeof(DateOnly)) inputType = InputType.Date;
+			else if (propertyType == typeof(TimeSpan) || propertyType == typeof(TimeOnly)) inputType = InputType.Time;
+			else if (propertyType == typeof(bool)) inputType = InputType.Checkbox;
+			else if (propertyType == typeof(IFormFile)) inputType = InputType.File;
+			element.Attributes.Add("type", inputType.GetEnumDescription());
 		}
 
 		foreach (IHtmlAttribute attribute in propertyInfo.GetCustomAttributes().Where(x => x is IHtmlAttribute).Cast<IHtmlAttribute>()) {
 			element.Attributes.Add(attribute.HtmlAttribute);
 		}
-
 		MaxLengthAttribute maxLengthAttribute = propertyInfo.GetCustomAttribute<MaxLengthAttribute>();
 		if (maxLengthAttribute != null) element.Attributes.Add("maxlength", maxLengthAttribute.Length.ToString());
 
@@ -153,8 +158,6 @@ public class Popup {
 
 		return element;
 	}
-
-
 
 	private HtmlNode CreateElement(string tagName) => Document.CreateElement(tagName);
 }

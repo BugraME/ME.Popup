@@ -15,26 +15,5 @@
 	Action = "/Test",
 	Enctype = FormEnctype.FormUrlEncoded,
 	Method = FormHttpMethod.Post,
-	ColumnCount = 2,
-}).Render("#btnPopup"))
- *@
-
-@(Meplate.Popup().Form(f => {
-	f.Title = "Test Form Örneği";
-	f.HtmlId = "formTest";
-	f.Action = "/Test";
-	f.Enctype = FormEnctype.FormUrlEncoded;
-	f.Method = FormHttpMethod.Post;
-	f.ColumnCount = 1;
-
-	f.AddGroups(g => {
-		g.Label = "Test";
-		g.Element = new Input(InputTypes.Text, "Test");		
-	});
-
-	f.AddGroups(g => {
-		g.Label = "2";
-		g.Element = new Input(InputTypes.Color, "568745", "place", true);
-	});
-
+	ColumnCount = 1,
 }).Render("#btnPopup"))
