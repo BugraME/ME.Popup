@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ME.Popup\ME.Popup.csproj" />
+    <ProjectReference Include="..\Meplate\WithoutModel.csproj" />
   </ItemGroup>
 
 </Project>

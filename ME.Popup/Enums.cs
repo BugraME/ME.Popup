@@ -58,8 +58,8 @@ public enum ElementType {
 }
 
 public enum FormHttpMethod {
-	Get = 1,
-	Post = 2,
+	[Description("get")] Get = 1,
+	[Description("post")] Post = 2,
 }
 public enum FormEnctype {
 	[Description("text/plain")] TextPlain = 0,
