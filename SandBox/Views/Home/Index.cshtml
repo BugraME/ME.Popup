@@ -3,7 +3,10 @@
 @using Meplate.Models
 @{
 	ViewData["Title"] = "Home Page";
+
+
 }
+@model TestModel
 
 <h1>Hoş Geldiniz</h1>
 <p>Bu panel <b>ME Popup</b> için hazırlanmış test panelidir.</p>
@@ -16,4 +19,22 @@
 	Enctype = FormEnctype.FormUrlEncoded,
 	Method = FormHttpMethod.Post,
 	ColumnCount = 1,
+}).Render("#btnPopup"))*@
+
+
+@{
+	List<SelectListItem> list = new() { new("Seçenek 1", "1") };
+}
+
+@(Meplate.Popup().Form<TestModel>(f => {
+	f.Title = "Test Form Örneği";
+	f.HtmlId = "formTest";
+	f.Action = "/Test";
+	f.Enctype = FormEnctype.FormUrlEncoded;
+	f.Method = FormHttpMethod.Post;
+	f.ColumnCount = 1;
+
+	f.AddGroup("TestInput", new Input(InputTypes.Text, "Test", "place", true));
+	f.AddGroup("TestSelect", new Select<InputTypes>());
+	f.AddGroup("TestSelect2", new Select(list.Select(x => new Option { Text = x.Text, Value = x.Value })));
 }).Render("#btnPopup"))

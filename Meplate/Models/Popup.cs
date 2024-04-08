@@ -9,6 +9,10 @@ public class Popup {
 		Element = new Form(formAction);
 		return this;
 	}
+	public Popup Form<T>(Action<Form> formAction) {		
+		Element = new Form(formAction, typeof(T));
+		return this;
+	}
 
 	public IHtmlContent Render(string selector) {
 		string script = $@"<script>$(document).on('click', '{selector}', () => $('#{Id}').fadeIn());</script>";
@@ -17,13 +21,13 @@ public class Popup {
 		if (Element is Form form) {
 			HtmlElement formElement = new() { Tag = "form" };
 			formElement.Nodes.Add(new HtmlElement(HtmlTags.I, "x") { Class = "me-close-icon" });
-			if (!string.IsNullOrEmpty(form.HtmlId)) formElement.AddCustomAttribute(("id", form.HtmlId));
-			formElement.AddCustomAttribute(("action", form.Action), ("method", form.Method.GetEnumDescription()), ("enctype", form.Enctype.GetEnumDescription()));
+			if (!string.IsNullOrEmpty(form.HtmlId)) formElement.AddCustomAttribute("id", form.HtmlId);
+			formElement.AddCustomAttributes(("action", form.Action), ("method", form.Method.GetEnumDescription()), ("enctype", form.Enctype.GetEnumDescription()));
 			if (!string.IsNullOrEmpty(form.Title)) formElement.Nodes.Add(new HtmlElement(HtmlTags.H2, form.Title));
 			if (form.ColumnCount >= 7) formElement.AddClass("me-col-7");
 			else if (form.ColumnCount > 1) formElement.AddClass($"me-col-{form.ColumnCount}");
 			foreach (FormGroup group in form.Groups) {
-				Label groupLabel = group.Label as Label;
+				Label groupLabel = group.Label;
 				groupLabel.Value += group.Element.Required ? ":*" : ":";
 				IHtmlElement formGroup = new HtmlElement { Class = "me-form-group", Nodes = [groupLabel, group.Element] };
 				formElement.Nodes.Add(formGroup);
