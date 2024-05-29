@@ -1,0 +1,177 @@
+﻿:root {
+	--me-popup-bg: #00000080;
+	--me-popup-background-color: white;
+	--me-popup-shadow: 0px 0px 10px #00000059;
+	--me-popup-border-color: #404040;
+	--me-popup-border-color-focus: black;
+	--me-popup-border-radius: 5px;
+}
+
+.me-popup * {
+	box-sizing: border-box;
+}
+
+.me-popup {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: var(--me-popup-bg);
+	z-index: 1000;
+}
+
+	.me-popup > *:first-child {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background: var(--me-popup-background-color);
+		padding: 20px;
+		border-radius: var(--me-popup-border-radius);
+		box-shadow: var(--me-popup-shadow);
+	}
+
+		.me-popup > *:first-child > i.me-close-icon {
+			line-height: 10px;
+			font-style: normal;
+			font-weight: bold;
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			cursor: pointer;
+		}
+
+/*#region Button */
+.me-btn-group {
+	grid-column: 1/-1;
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0,1fr));
+	gap: 20px;
+}
+
+.me-btn {
+}
+
+	.me-btn.me-submit {
+	}
+
+	.me-btn.me-cancel {
+	}
+
+
+/*#endregion */
+
+
+/*#region Form */
+
+.me-popup > form:first-child {
+	display: grid;
+	gap: 10px;
+}
+
+	.me-popup > form:first-child.me-col-2 {
+		grid-template-columns: repeat(2, minmax(0,1fr));
+	}
+
+	.me-popup > form:first-child.me-col-3 {
+		grid-template-columns: repeat(3, minmax(0,1fr));
+	}
+
+	.me-popup > form:first-child.me-col-4 {
+		grid-template-columns: repeat(4, minmax(0,1fr));
+	}
+
+	.me-popup > form:first-child.me-col-5 {
+		grid-template-columns: repeat(5, minmax(0,1fr));
+	}
+
+	.me-popup > form:first-child.me-col-6 {
+		grid-template-columns: repeat(6, minmax(0,1fr));
+	}
+
+	.me-popup > form:first-child.me-col-7 {
+		grid-template-columns: repeat(7, minmax(0,1fr));
+	}
+
+	.me-popup > form:first-child h2 {
+		grid-column: 1 / -1;
+		text-align: center;
+	}
+
+	.me-popup > form:first-child .me-form-group {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 5px;
+	}
+
+		.me-popup > form:first-child .me-form-group > .me-image-reviewer[src] {
+			height: 100px;
+			width: 100px;
+			object-fit: contain;
+		}
+
+		.me-popup > form:first-child .me-form-group > label {
+			font-weight: bold;
+		}
+
+		.me-popup > form:first-child .me-form-group > :is(input,textarea,select) {
+			display: flex;
+			align-items: center;
+			height: 35px;
+			padding: 2.5px 10px;
+			border: 0;
+			border-radius: var(--me-popup-border-radius);
+			outline: 1px solid var(--me-popup-border-color);
+		}
+
+			.me-popup > form:first-child .me-form-group > :is(input,textarea,select):focus {
+				outline: 2px solid var(--me-popup-border-color-focus);
+			}
+
+		.me-popup > form:first-child .me-form-group > textarea {
+			height: unset;
+		}
+
+		.me-popup > form:first-child .me-form-group > input[type=file] {
+			outline: 0;
+			padding: 0;
+			border-radius: 0;
+		}
+
+		.me-popup > form:first-child .me-form-group > input[type=checkbox] {
+			position: relative;
+			margin-right: auto;
+			width: 0;
+			outline: 0;
+		}
+
+			.me-popup > form:first-child .me-form-group > input[type=checkbox]:before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 35px;
+				height: 35px;
+				outline: 1px solid var(--me-popup-border-color);
+				border-radius: var(--me-popup-border-radius);
+				background: white;
+				box-sizing: border-box;
+			}
+
+		.me-popup > form:first-child .me-form-group:has(input[type=file],textarea,button[type=submit]) {
+			grid-column: 1 / -1;
+		}
+
+		.me-popup > form:first-child .me-form-group > button[type=submit] {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 35px;
+			padding-inline: 10px;
+			margin-left: auto;
+		}
+
+/*#endregion */

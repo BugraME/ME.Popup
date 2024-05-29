@@ -1,5 +1,8 @@
-﻿using Meplate.Attributes;
-using Meplate.Enums;
+﻿using ME.Popup;
+using ME.Popup.Attributes.Concrete.Form;
+using ME.Popup.Attributes.Concrete.Form.File;
+using ME.Popup.Attributes.Concrete.Form.Text;
+using ME.Popup.Attributes.Concrete.General;
 using System.ComponentModel.DataAnnotations;
 
 namespace SandBox.Models;
@@ -9,7 +12,7 @@ public class TestModel2 {
 	[Label("Tarih")] public DateTime Date { get; set; }
 	[Order(2)] public bool IsEnabled { get; set; }
 	[ImageReviewer, MultipleFiles] public IFormFile File { get; set; }
-	[Required, MaxLength(200), Label("Adres"), TextArea(2), Order(1)] public string Address { get; set; }
+	[Required, MaxLength(200), Label("Adres"), TextArea, Order(1)] public string Address { get; set; }
 	[InputType(InputTypes.DateTimeLocal)] public DateTime Time { get; set; }
 }
 public class TestModel {
@@ -19,8 +22,6 @@ public class TestModel {
 	[Required] public DateOnly BirthDate { get; set; }
 	[Required] public TimeSpan BirthTime { get; set; }
 	[TextArea(3), MaxLength(400)] public string Address { get; set; }
-	[ImageReviewer] public IFormFile ProfilePhoto { get; set; }
+	[ImageReviewer, MultipleFiles] public IFormFile ProfilePhoto { get; set; }
 	public bool IsLegal { get; set; }
-
-
 }

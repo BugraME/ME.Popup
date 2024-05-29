@@ -1,61 +1,22 @@
-:root {
-    --bme-black: #545454;
-    --bme-gray: #979797;
+html {
+  font-size: 14px;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
 }
 
 body {
-    font-family: Calibri, sans-serif;
-    display: grid;
-    grid-template-rows: 65px 1fr;
-    grid-template-columns: max(300px, 15vw) 1fr;
-    grid-template-areas:
-        "header header"
-        "aside main";
-    height: 100vh;
-    width: 100vw;
-}
-
-header {
-    grid-area: header;
-    padding-inline: 20px;
-    display: flex;
-    align-items: center;
-    box-shadow: #00000059 0px 5px 15px;
-}
-
-aside {
-    grid-area: aside;
-    background: var(--bme-black);
-}
-
-    aside > nav > ul {
-        display: flex;
-        flex-direction: column;
-    }
-
-        aside > nav > ul > li {
-            padding: 15px 20px;
-            cursor: pointer;
-            transition: 300ms;
-        }
-
-            aside > nav > ul > li:is(:hover,.active) {
-                background: var(--bme-gray);
-                padding-left: 25px;
-            }
-
-            aside > nav > ul > li > a {
-                text-decoration: none;
-                color: white;
-            }
-
-main {
-    grid-area: main;
-    padding: 20px;
+  margin-bottom: 60px;
 }
